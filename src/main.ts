@@ -6,6 +6,7 @@ async function bootstrap() {
   const port = 8080;
   const app = await NestFactory.create(AppModule);
 
+  app.setGlobalPrefix('api');
   app.enableCors();
 
   const option = new DocumentBuilder()

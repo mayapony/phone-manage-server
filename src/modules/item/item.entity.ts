@@ -15,7 +15,7 @@ export class Item {
   @ApiProperty()
   id: number;
 
-  @Column({ unique: true })
+  @Column({ unique: false })
   @ApiProperty()
   sn: string;
 

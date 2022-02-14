@@ -94,7 +94,6 @@ export class ItemService {
 
   async findBySn(sn: string) {
     console.log(sn);
-
     let data: any;
     try {
       data = await this.itemRepository.findOne(

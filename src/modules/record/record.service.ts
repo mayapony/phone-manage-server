@@ -21,7 +21,11 @@ export class RecordService {
     try {
       const record = await this.recordRepository.create(createRecordsDto);
       data = await this.recordRepository.save(record);
-      await this.itemRepository.delete({ sn: createRecordsDto.sn });
+      // 仅仅删除一个
+      const item: Item = await this.itemRepository.findOne({
+        sn: createRecordsDto.sn,
+      });
+      await this.itemRepository.remove(item);
     } catch (err) {
       console.error(err);
       return (this.response = {
