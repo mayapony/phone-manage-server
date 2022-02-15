@@ -3,13 +3,14 @@ import { Phone } from './phone.entity';
 import { PhoneService } from './phone.service';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { StockInDto } from '../item/dto/stockIn.dto';
+import { Pagination } from 'src/interfaces/Pagination';
 
 @Controller('phone')
 @ApiTags('Phone')
 export class PhoneController {
   constructor(private phoneService: PhoneService) {}
 
-  @Get('findAll')
+  @Post('findAll')
   @ApiOperation({
     summary: '获取所有的Phone',
   })
@@ -17,7 +18,8 @@ export class PhoneController {
     description: '所有的Phone列表',
     type: [Phone],
   })
-  async findAll(): Promise<Phone[]> {
+  async findAll(@Body() pagination: Pagination): Promise<Phone[]> {
+    console.log(pagination);
     return await this.phoneService.findAll();
   }
 
