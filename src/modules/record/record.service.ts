@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IResponse } from 'src/interfaces/IResponse';
-import { Repository } from 'typeorm';
+import { Between, Not, Repository } from 'typeorm';
 import { Item } from '../item/item.entity';
 import { CreateRecordsDto } from './dto/createRecordsDto';
+import { SearchRecordsDto } from './dto/searchRecordsDto';
 import { Record } from './record.entity';
 
 @Injectable()
@@ -39,12 +40,24 @@ export class RecordService {
     });
   }
 
-  async findRecords() {
+  async findRecords(searchRecordsDto: SearchRecordsDto) {
+    const where = {
+      created_at: Between(
+        new Date(searchRecordsDto.dateRange[0]),
+        new Date(searchRecordsDto.dateRange[1]),
+      ),
+    };
+    if (searchRecordsDto.paid) {
+      where['earning'] = Not(0);
+    } else {
+      where['earning'] = 0;
+    }
     try {
       const data = await this.recordRepository.find({
         order: {
           created_at: 'DESC',
         },
+        where: where,
       });
       return (this.response = {
         status: true,

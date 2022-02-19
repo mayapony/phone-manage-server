@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { IResponse } from 'src/interfaces/IResponse';
 import { Repository } from 'typeorm';
 import { StockInDto } from '../item/dto/stockIn.dto';
+import { FindPhoneDto } from './dto/findPhone.dto';
 import { Phone } from './phone.entity';
 
 @Injectable()
@@ -14,8 +15,17 @@ export class PhoneService {
     private phoneRepository: Repository<Phone>,
   ) {}
 
-  findAll(): Promise<Phone[]> {
-    return this.phoneRepository.find({ relations: ['items'] });
+  findAll(findPhoneDto: FindPhoneDto): Promise<Phone[]> {
+    const realFindPhoneDto = {};
+    for (const key in findPhoneDto)
+      if (findPhoneDto[key] !== '') realFindPhoneDto[key] = findPhoneDto[key];
+    return this.phoneRepository.find({
+      relations: ['items'],
+      where: realFindPhoneDto,
+      order: {
+        created_at: 'DESC',
+      },
+    });
   }
 
   async findBrandName() {

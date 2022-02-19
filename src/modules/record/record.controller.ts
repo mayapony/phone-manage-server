@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateRecordsDto } from './dto/createRecordsDto';
+import { SearchRecordsDto } from './dto/searchRecordsDto';
 import { RecordService } from './record.service';
 
 @Controller('record')
@@ -13,8 +14,8 @@ export class RecordController {
     return await this.recordService.createRecords(createRecordsDto);
   }
 
-  @Get('find-records')
-  async findRecords() {
-    return await this.recordService.findRecords();
+  @Post('find-records')
+  async findRecords(@Body() searchRecordsDto: SearchRecordsDto) {
+    return await this.recordService.findRecords(searchRecordsDto);
   }
 }
